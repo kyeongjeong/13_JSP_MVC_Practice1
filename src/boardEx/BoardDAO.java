@@ -1,10 +1,10 @@
 package boardEx;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-
-import java.sql.DriverManager;
+import java.util.ArrayList;
 
 public class BoardDAO {
 	
@@ -35,14 +35,24 @@ public class BoardDAO {
 		if (conn != null)  try {conn.close();} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public void insertBoard() {
+	public void insertBoard(BoardDTO boardDTO) {
+		
+		//System.out.println(boardDTO);
 		
 		try {
 			
 			getConnection();
 			
-			String sql = "";
+			String sql = "INSERT INTO BOARD(WRITER , EMAIL , SUBJECT , PASSWORD , CONTENT , READ_CNT , ENROLL_DT)";
+			sql += "VALUES(? , ? , ? , ? , ? , 0 , NOW())";
 			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, boardDTO.getWriter());
+			pstmt.setString(2, boardDTO.getEmail());
+			pstmt.setString(3, boardDTO.getSubject());
+			pstmt.setString(4, boardDTO.getPassword());
+			pstmt.setString(5, boardDTO.getContent());
+			pstmt.executeUpdate();
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -50,5 +60,41 @@ public class BoardDAO {
 		finally {
 			getClose();
 		}
+	}
+	
+	public ArrayList<BoardDTO> getBoardList() {
+		
+		ArrayList<BoardDTO> boardList = new ArrayList<>();
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD");
+			rs = pstmt.executeQuery();
+			
+			while(rs.next()) {
+				
+				BoardDTO boardTemp = new BoardDTO();
+				boardTemp.setBoardId(rs.getLong("BOARD_ID"));
+				boardTemp.setWriter(rs.getString("WRITER"));
+				boardTemp.setEmail(rs.getString("EMAIL"));
+				boardTemp.setSubject(rs.getString("SUBJECT"));
+				boardTemp.setPassword(rs.getString("PASSWORD"));
+				boardTemp.setContent(rs.getString("CONTENT"));
+				
+				boardList.add(boardTemp);
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+		
+		//System.out.println(boardList);
+		
+		return boardList;
 	}
 }

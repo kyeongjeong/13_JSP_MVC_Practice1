@@ -4,9 +4,11 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>bListPro</title>
+<title>bDetail</title>
 </head>
 <body>
-
+	<%
+		
+	%>
 </body>
 </html>

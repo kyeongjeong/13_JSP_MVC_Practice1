@@ -37,7 +37,7 @@
 				</tr>
 				</table>
 				<p>
-					<input type="submit" value="작성" onclick="location.href='bWritePro.jsp'"/>
+					<input type="submit" value="작성"/>
 					<input type="button" value="목록보기" onclick="location.href='bList.jsp'">
 				</p>
 		</form>

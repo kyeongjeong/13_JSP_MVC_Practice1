@@ -7,6 +7,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>bWritePro</title>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
 	
@@ -18,7 +19,22 @@
 		boardDTO.setSubject(request.getParameter("subject"));
 		boardDTO.setEmail(request.getParameter("email"));
 		boardDTO.setPassword(request.getParameter("password"));
+		
+		BoardDAO.getInstance().insertBoard(boardDTO);
 	%>
+	
+	<script>
+		Swal.fire(
+			
+			'게시글이 등록되었습니다.',
+			'<b style="color:green;">게시글 목록으로 이동합니다.</b>',
+	        'success'
+		)
+		.then(function() {
+			
+			location.href = "bList.jsp";
+		})
+	</script>
 	
 </body>
 </html>
