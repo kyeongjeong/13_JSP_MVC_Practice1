@@ -105,4 +105,67 @@ public class MemberDAO {
 		
 		return isInsert;
 	}
+	
+	public MemberDTO getMemberDetail(String memberId) {
+		
+		MemberDTO memberDTO = new MemberDTO();
+		
+		try {
+			
+			getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM MEMBER WHERE MEMBER_ID = ?");
+			pstmt.setString(1, memberId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				memberDTO.setMemberId(memberId);
+				memberDTO.setMemberNm(rs.getString("MEMBER_NM"));
+				memberDTO.setSex(rs.getString("SEX"));
+				memberDTO.setBirthDt(rs.getString("BIRTH_DT"));
+				memberDTO.setHp(rs.getString("HP"));
+				memberDTO.setSmsRecvAgreeYn(rs.getString("SMS_RECV_AGREE_YN"));
+				memberDTO.setEmail(rs.getString("EMAIL"));
+				memberDTO.setEmailRecvAgreeYn(rs.getString("EMAIL_RECV_AGREE_YN"));
+				memberDTO.setZipcode(rs.getString("ZIPCODE"));
+				memberDTO.setRoadAddress(rs.getString("ROAD_ADDRESS"));
+				memberDTO.setJibunAddress(rs.getString("JIBUN_ADDRESS"));
+				memberDTO.setNamujiAddress(rs.getString("NAMUJI_ADDRESS"));
+				memberDTO.setJoinDt(rs.getDate("JOIN_DT"));
+			}
+		}		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+		
+		return memberDTO;
+	}
+	
+	public String getMemberNm(String memberId) {
+		
+		String memberNm = null;
+		
+		try {
+			
+			getConnection();
+			pstmt = conn.prepareStatement("SELECT * FROM MEMBER WHERE MEMBER_ID = ?");
+			pstmt.setString(1, memberId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {			
+				memberNm = rs.getString("MEMBER_NM");
+			}
+		}		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+		
+		return memberNm;
+	}
 }

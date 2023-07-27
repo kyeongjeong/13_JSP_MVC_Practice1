@@ -97,4 +97,111 @@ public class BoardDAO {
 		
 		return boardList;
 	}
+	
+	public BoardDTO getBoardDetail(long boardId) {
+		
+		BoardDTO boardDTO = new BoardDTO();
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("UPDATE BOARD SET READ_CNT = READ_CNT + 1 WHERE BOARD_ID = ?");
+			pstmt.setLong(1, boardId);
+			pstmt.executeUpdate();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD WHERE BOARD_ID = ?");
+			pstmt.setLong(1, boardId);
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				
+				boardDTO.setBoardId(boardId);
+				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setWriter(rs.getString("WRITER"));
+				boardDTO.setEmail(rs.getString("EMAIL"));
+				boardDTO.setSubject(rs.getString("SUBJECT"));
+				boardDTO.setContent(rs.getString("CONTENT"));
+				boardDTO.setReadCnt(rs.getLong("READ_CNT"));
+				boardDTO.setEnrollDt(rs.getDate("ENROLL_DT"));
+			}
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+		
+		return boardDTO;
+	}
+	
+	public boolean checkAuthorizedUser(BoardDTO boardDTO) {
+		
+		boolean isAuthorizedUser = false;
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("SELECT * FROM BOARD WHERE BOARD_ID = ? AND PASSWORD = ?");
+			pstmt.setLong(1, boardDTO.getBoardId());
+			pstmt.setString(2, boardDTO.getPassword());
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) 
+				isAuthorizedUser = true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+		
+		return isAuthorizedUser;
+	}
+	
+	public void updateBoard(BoardDTO boardDTO) {
+		
+		try {
+			
+			getConnection();
+			
+			String sql = "UPDATE BOARD SET "; //set 옆에 띄어쓰기 주의
+		    sql += "SUBJECT = ?,";
+		    sql += "CONTENT = ?";
+		    sql += "WHERE BOARD_ID = ?";
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,  boardDTO.getSubject());
+			pstmt.setString(2, boardDTO.getContent());
+			pstmt.setLong(3, boardDTO.getBoardId());
+			pstmt.executeUpdate();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+	}
+	
+	public void deleteBoard(long boardId) {
+		
+		try {
+			
+			getConnection();
+			
+			pstmt = conn.prepareStatement("DELETE FROM BOARD WHERE BOARD_ID = ?");
+			pstmt.setLong(1, boardId);
+			pstmt.executeUpdate();
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		finally {
+			getClose();
+		}
+	}
 }

@@ -6,11 +6,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>bList</title>
+	<meta charset="UTF-8">
+	<title>bList</title>
 </head>
 <body>
-
+	
+	<%
+		String memberId = (String)session.getAttribute("memberId");
+	%>
+	
+	<p style="text-align:right">
+		환영합니다 <%=memberId %>님<br>
+		<input type="button" value="마이페이지" onclick="location.href='../memberEx/mDetail.jsp'">
+	</p>
+	
 	<div align="center">
 		<h3>커뮤니티 게시글</h3>
 		<table border="1">
@@ -29,7 +38,7 @@
 			%>
 					<tr>
 						<td><%=idx++ %></td>
-						<td><%=boardDTO.getSubject() %></td>
+						<td><a href="bDetail.jsp?boardId=<%=boardDTO.getBoardId()%>"><%=boardDTO.getSubject() %></a></td>
 						<td><%=boardDTO.getWriter() %></td>
 						<td><%=boardDTO.getEnrollDt() %></td>
 						<td><%=boardDTO.getReadCnt() %></td>
